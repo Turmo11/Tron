@@ -18,6 +18,7 @@ using namespace std;
 
 
 
+
 enum Key_State
 {
 	KEY_IDLE,
@@ -41,8 +42,8 @@ Key_State keys[300];
 
 //Rects
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
-SDL_Rect ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
-SDL_Rect ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
+SDL_Rect ship_rect1 = {};
+SDL_Rect ship_rect2 = {};
 
 //Music
 //Mix_Music *bgmusic = NULL;
