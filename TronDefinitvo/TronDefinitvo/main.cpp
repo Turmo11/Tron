@@ -307,6 +307,16 @@ int main(int argc, char* argv[])
 				render2 = false;
 				
 			}
+			if (check_border(ship_rect1, bg_rect)) {
+
+				SDL_Delay(10);
+				render1 = false;
+			}
+			if (check_border(ship_rect2, bg_rect)) {
+
+				SDL_Delay(10);
+				render2 = false;
+			}
 			
 			ship_rect1.x = velx1;
 			ship_rect1.y = vely1;
