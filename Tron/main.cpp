@@ -1,4 +1,5 @@
-#include<iostream>
+#include <iostream>
+
 
 #include "SDL/include/SDL.h"
 #include "SDL2_image-2.0.4/include/SDL_image.h"
