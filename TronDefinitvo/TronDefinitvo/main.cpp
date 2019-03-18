@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <math.h>
 
 
 #include "SDL/include/SDL.h"
@@ -44,6 +45,7 @@ Key_State keys[300];
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
+bool render = true;
 
 //Music
 //Mix_Music *bgmusic = NULL;
@@ -154,8 +156,12 @@ void Draw()
 	SDL_RenderClear(renderer);
 
 	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
-	SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
-	SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
+	
+	if (render) {
+
+		SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
+		SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
+	}
 
 
 	SDL_RenderPresent(renderer);
@@ -238,9 +244,15 @@ int main(int argc, char* argv[])
 		while (ProcessInput())
 		{
 			UpdateLogic();
-			Draw();
+			if (check_collision(ship_rect1, ship_rect2)) {
+				
+				SDL_Delay(10);
+				render = false;
+				
+			}
+				Draw();
 
-			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN || check_collision(ship_rect1, ship_rect2)) {
+			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
 				SDL_Quit();
 				break;
