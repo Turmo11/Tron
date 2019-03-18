@@ -1,5 +1,9 @@
 #include <iostream>
 
+#include <stdlib.h>
+#include <time.h>
+#include <stdio.h>
+
 
 #include "SDL/include/SDL.h"
 #include "SDL2_image-2.0.4/include/SDL_image.h"
@@ -11,6 +15,8 @@
 //#pragma comment(lib, "SDL2_mixer-2.0.4/lib1/w86/SDL2_mixer.lib")
 
 using namespace std;
+
+
 
 enum Key_State
 {
@@ -35,8 +41,8 @@ Key_State keys[300];
 
 //Rects
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
-SDL_Rect ship_rect1 = { 200, 200, 211, 186 };
-SDL_Rect ship_rect2 = { 1720, 880, 211, 186 };
+SDL_Rect ship_rect1 = { 200, 200, 141, 116 };
+SDL_Rect ship_rect2 = { 1709, 894, 141, 116 };
 
 //Music
 //Mix_Music *bgmusic = NULL;
@@ -105,8 +111,8 @@ void CleanupSDL()
 void InitVariables()
 {
 	bg_texture = IMG_LoadTexture(renderer, "Textures/background.png");
-	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceShip.png");
-	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceShip.png");
+	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceship-green.png");
+	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceship-purple.png");
 	//bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
 
 
@@ -149,7 +155,7 @@ void Draw()
 	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 	SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
 	SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
-	
+
 
 	SDL_RenderPresent(renderer);
 }
@@ -181,12 +187,14 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
 	{
-		
+
 	}
 }
 
 int main(int argc, char* argv[])
 {
+	srand(time(NULL));
+
 	if (InitSDL())
 	{
 		InitVariables();
