@@ -219,6 +219,38 @@ bool check_collision(SDL_Rect a, SDL_Rect b)
 	return true;
 }
 
+bool check_border(SDL_Rect a, SDL_Rect b)
+{
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	leftA = a.x + 5;
+	rightA = a.x + a.w - 5;
+	topA = a.y + 5;
+	bottomA = a.y + a.h - 5;
+
+	leftB = 0;
+	rightB = 1920;
+	topB = 0;
+	bottomB = 1080;
+
+	if (bottomA <= topB) {
+		return false;
+	}
+	if (topA >= bottomB) {
+		return false;
+	}
+	if (rightA <= leftB) {
+		return false;
+	}
+	if (leftA >= rightB) {
+		return false;
+	}
+	return true;
+}
+
 void UpdateLogic()
 {
 
