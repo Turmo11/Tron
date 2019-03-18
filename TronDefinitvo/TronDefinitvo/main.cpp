@@ -41,8 +41,8 @@ Key_State keys[300];
 
 //Rects
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
-SDL_Rect ship_rect1 = { 200, 200, 141, 116 };
-SDL_Rect ship_rect2 = { 1709, 894, 141, 116 };
+SDL_Rect ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
+SDL_Rect ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
 
 //Music
 //Mix_Music *bgmusic = NULL;
@@ -194,6 +194,9 @@ void UpdateLogic()
 int main(int argc, char* argv[])
 {
 	srand(time(NULL));
+
+	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
+	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
 
 	if (InitSDL())
 	{
