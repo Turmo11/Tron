@@ -47,16 +47,19 @@ SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 
-bool render = true;
+bool render1 = true;
+bool render2 = true;
 
 float angle1 = 90.0f;
 float angle2 = 270.0f;
 
-float velx1;
-float vely1;
+const float speed = 1.0f;
 
-float velx2;
-float vely2;
+float velx1 = speed * cos(angle1);
+float vely1 = speed * sin(angle1);
+
+float velx2 = speed * cos(angle2);
+float vely2 = speed * sin(angle2);
 
 SDL_RendererFlip flip = SDL_FLIP_NONE;
 SDL_Point center = { 70, 58};
@@ -171,13 +174,13 @@ void Draw()
 
 	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 	
-	if (render) {
+	if (render1) {
 
-		//SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
 		SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
-		SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+	}
+	if (render2) {
 
-		//SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
+		SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
 	}
 
 
@@ -229,9 +232,9 @@ void UpdateLogic()
 		if (ship_rect1.x < 0) ship_rect1.x = 0;
 
 		angle1 -= 1.0;
-		int newx = ship_rect1.x + (ship_rect1.y*cos(angle1 * 0.0174532925));
+	/*	int newx = ship_rect1.x + (ship_rect1.y*cos(angle1 * 0.0174532925));
 		int newy = ship_rect1.y + (ship_rect1.y*sin(angle1 * 0.0174532925));
-		
+		*/
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
@@ -268,10 +271,15 @@ int main(int argc, char* argv[])
 			if (check_collision(ship_rect1, ship_rect2)) {
 				
 				SDL_Delay(10);
-				render = false;
+				render1 = false;
+				render2 = false;
 				
 			}
-				Draw();
+			
+			ship_rect1.x = velx1;
+			ship_rect1.y = vely1;
+
+			Draw();
 
 
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
