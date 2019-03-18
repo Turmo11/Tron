@@ -6,6 +6,7 @@
 #include <math.h>
 
 
+
 #include "SDL/include/SDL.h"
 #include "SDL2_image-2.0.4/include/SDL_image.h"
 //#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
@@ -45,7 +46,20 @@ Key_State keys[300];
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
+
 bool render = true;
+
+float angle1 = 90.0f;
+float angle2 = 270.0f;
+
+float velx1;
+float vely1;
+
+float velx2;
+float vely2;
+
+SDL_RendererFlip flip = SDL_FLIP_NONE;
+SDL_Point center = { 70, 58};
 
 //Music
 //Mix_Music *bgmusic = NULL;
@@ -159,8 +173,11 @@ void Draw()
 	
 	if (render) {
 
-		SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
-		SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
+		//SDL_RenderCopy(renderer, ship_texture1, nullptr, &ship_rect1);
+		SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+		SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+
+		//SDL_RenderCopy(renderer, ship_texture2, nullptr, &ship_rect2);
 	}
 
 
@@ -204,14 +221,17 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		ship_rect1.x += 3;
 		if (ship_rect1.x > 1920 - ship_rect1.w) ship_rect1.x = 1920 - ship_rect1.w;
-
+		angle1 += 1.0;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		ship_rect1.x -= 3;
 		if (ship_rect1.x < 0) ship_rect1.x = 0;
+
+		angle1 -= 1.0;
+		int newx = ship_rect1.x + (ship_rect1.y*cos(angle1 * 0.0174532925));
+		int newy = ship_rect1.y + (ship_rect1.y*sin(angle1 * 0.0174532925));
+		
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
@@ -223,6 +243,7 @@ void UpdateLogic()
 	{
 		ship_rect1.y += 3;
 		if (ship_rect1.y > 1080 - ship_rect1.h) ship_rect1.y = 1080 - ship_rect1.h;
+
 
 	}
 	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
@@ -251,6 +272,7 @@ int main(int argc, char* argv[])
 				
 			}
 				Draw();
+
 
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
