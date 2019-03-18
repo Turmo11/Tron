@@ -2,12 +2,12 @@
 
 #include "SDL/include/SDL.h"
 #include "SDL2_image-2.0.4/include/SDL_image.h"
-#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
+//#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
 
 #pragma comment(lib, "SDL/lib1/w86/SDL2.lib")
 #pragma comment(lib, "SDL/lib1/w86/SDL2main.lib")
 #pragma comment(lib, "SDL2_image-2.0.4/lib1/w86/SDL2_image.lib")
-#pragma comment(lib, "SDL2_mixer-2.0.4/lib1/w86/SDL2_mixer.lib")
+//#pragma comment(lib, "SDL2_mixer-2.0.4/lib1/w86/SDL2_mixer.lib")
 
 using namespace std;
 
@@ -31,11 +31,11 @@ Key_State keys[300];
 
 //Rects
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
-SDL_Rect ship_rect1 = { 200, 200, 150, 80 };
-SDL_Rect ship_rect2 = { 700, 700, 150, 80 };
+SDL_Rect ship_rect1 = { 200, 200, 75, 25 };
+SDL_Rect ship_rect2 = { 1720, 880, 75, 25 };
 
 //Music
-Mix_Music *bgmusic = NULL;
+//Mix_Music *bgmusic = NULL;
 
 
 bool InitSDL()
@@ -69,20 +69,20 @@ bool InitSDL()
 				surface = SDL_GetWindowSurface(window);
 			}
 
-			int flags = MIX_INIT_OGG | MIX_INIT_MOD;
-			int initted = Mix_Init(flags);
+			//int flags = MIX_INIT_OGG | MIX_INIT_MOD;
+			//int initted = Mix_Init(flags);
 
-			if (initted&flags != flags) {
-				printf("Mix_Init: Failed to init required ogg and mod support!\n");
-				printf("Mix_Init: %s\n", Mix_GetError());
-				// handle error
-				SDL_Quit();
-			}
-			else
-			{
-				Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
+			//if (initted&flags != flags) {
+			//	printf("Mix_Init: Failed to init required ogg and mod support!\n");
+			//	printf("Mix_Init: %s\n", Mix_GetError());
+			//	// handle error
+			//	SDL_Quit();
+			//}
+			//else
+			//{
+			//	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
 
-			}
+			//}
 		}
 
 
@@ -95,13 +95,13 @@ void CleanupSDL()
 {
 	SDL_Quit();
 	IMG_Quit();
-	Mix_Quit();
+	//Mix_Quit();
 }
 
 void InitVariables()
 {
 	bg_texture = IMG_LoadTexture(renderer, "Textures/background.png");
-	bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
+	//bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
 
 
 }
@@ -142,6 +142,14 @@ void Draw()
 
 	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 
+	SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);
+	SDL_RenderDrawRect(renderer, &ship_rect1);
+	SDL_RenderFillRect(renderer, &ship_rect1);
+
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	SDL_RenderDrawRect(renderer, &ship_rect2);
+	SDL_RenderFillRect(renderer, &ship_rect2);
+
 	SDL_RenderPresent(renderer);
 }
 void UpdateLogic()
@@ -150,7 +158,7 @@ void UpdateLogic()
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
 		ship_rect1.x += 3;
-		if (ship_rect1.x > 1920 - ship_rect1.w) ship_rect1.x = 1920 - ship_rect.w;
+		if (ship_rect1.x > 1920 - ship_rect1.w) ship_rect1.x = 1920 - ship_rect1.w;
 
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
