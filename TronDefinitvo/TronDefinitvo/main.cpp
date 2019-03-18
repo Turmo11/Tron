@@ -160,6 +160,39 @@ void Draw()
 
 	SDL_RenderPresent(renderer);
 }
+
+bool check_collision(SDL_Rect a, SDL_Rect b)
+{
+	int leftA, leftB;
+	int rightA, rightB;
+	int topA, topB;
+	int bottomA, bottomB;
+
+	leftA = a.x + 10;
+	rightA = a.x + a.w - 10;
+	topA = a.y + 10;
+	bottomA = a.y + a.h - 10;
+	
+	leftB = b.x + 10;
+	rightB = b.x + b.w - 10;
+	topB = b.y + 10;
+	bottomB = b.y + b.h - 10;
+
+	if (bottomA <= topB) {
+		return false;
+	}
+	if (topA >= bottomB) {
+		return false;
+	}
+	if (rightA <= leftB) {
+		return false;
+	}
+	if (leftA >= rightB) {
+		return false;
+	}
+	return true;
+}
+
 void UpdateLogic()
 {
 
@@ -207,7 +240,7 @@ int main(int argc, char* argv[])
 			UpdateLogic();
 			Draw();
 
-			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
+			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN || check_collision(ship_rect1, ship_rect2)) {
 
 				SDL_Quit();
 				break;
