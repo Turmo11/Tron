@@ -29,6 +29,12 @@ Isekai hack is a team of videogame design and development students formed by:
 
  Marc Kenneth (marc535) - https://github.com/marc535
 
+ASSETS:
+
+//Freesound.org
+Background music - JuniorGroove, "1vs0JuniorGroove"
+Laser effect - Jorge Rosa, "laser-shock-03"
+
 Enjoy our Game!
 
 Isekai Hack
