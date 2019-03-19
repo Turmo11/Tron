@@ -9,12 +9,12 @@
 
 #include "SDL/include/SDL.h"
 #include "SDL2_image-2.0.4/include/SDL_image.h"
-//#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
+#include "SDL2_mixer-2.0.4/include/SDL_mixer.h"
 
 #pragma comment(lib, "SDL/lib1/w86/SDL2.lib")
 #pragma comment(lib, "SDL/lib1/w86/SDL2main.lib")
 #pragma comment(lib, "SDL2_image-2.0.4/lib1/w86/SDL2_image.lib")
-//#pragma comment(lib, "SDL2_mixer-2.0.4/lib1/w86/SDL2_mixer.lib")
+#pragma comment(lib, "SDL2_mixer-2.0.4/lib1/w86/SDL2_mixer.lib")
 
 using namespace std;
 
@@ -72,6 +72,8 @@ bool gameEnd = false;
 
 bool purpleWin = false;
 bool greenWin = false;
+bool draw = false;
+
 
 bool render1 = true;
 bool render2 = true;
@@ -83,7 +85,7 @@ float pshotAngle;
 
 
 const float speed = 2.0f;
-const float bspeed = 6.0f;
+const float bspeed = 3.0f;
 
 float velx1;
 float vely1;
@@ -109,8 +111,8 @@ SDL_Point center = { 70, 58 };
 SDL_Point centerb = { 16, 4 };
 
 //Music
-//Mix_Music *bgmusic = NULL;
-
+//Mix_Music *bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
+Mix_Music *bgmusic = nullptr;
 
 bool InitSDL()
 {
@@ -142,44 +144,39 @@ bool InitSDL()
 			{
 				surface = SDL_GetWindowSurface(window);
 			}
+			 
+			int flags = MIX_INIT_OGG;
+			if (!(Mix_Init(flags) & flags)) {
 
-			//int flags = MIX_INIT_OGG | MIX_INIT_MOD;
-			//int initted = Mix_Init(flags);
+				printf("SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError());
+				return false;
+			}
+			else
+			{
+				Mix_Init(MIX_INIT_OGG);
+				Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+				
 
-			//if (initted&flags != flags) {
-			//	printf("Mix_Init: Failed to init required ogg and mod support!\n");
-			//	printf("Mix_Init: %s\n", Mix_GetError());
-			//	// handle error
-			//	SDL_Quit();
-			//}
-			//else
-			//{
-			//	Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
-
-			//}
+			}
 		}
-
-
 	}
-
 	return true;
 }
 
-//void 
+
+
+
 
 void CleanupSDL()
 {
 	SDL_Quit();
 	IMG_Quit();
-	//Mix_Quit();
+	Mix_Quit();
 }
 
 void InitVariables()
 {
 	gamestarted = false;
-
-
-
 
 	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN2.png");
 	bg_texture2 = IMG_LoadTexture(renderer, "Textures/background.png");
@@ -197,7 +194,11 @@ void InitVariables()
 
 	gbeam_texture = IMG_LoadTexture(renderer, "Textures/green-beams.png");
 	pbeam_texture = IMG_LoadTexture(renderer, "Textures/purple-beams.png");
-	//bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
+	
+
+	bgmusic = Mix_LoadMUS("Textures/bmusic.ogg");
+	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
+	Mix_PlayMusic(bgmusic, -1);
 
 
 }
@@ -252,6 +253,12 @@ void Draw()
 		else if (greenWin) {
 
 			SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
+
+
+		}
+		else if (draw) {
+
+			SDL_RenderCopy(renderer, bg_texture6, nullptr, &bg_rect);
 
 
 		}
@@ -526,16 +533,15 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		angle1 += 2.0;
+		angle1 += 1.0;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		angle1 -= 2.0;
+		angle1 -= 1.0;
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
 		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20, 40 };
-
 		
 		gshot = true;
 	}
@@ -611,15 +617,15 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
 	{
-		angle2 -= 2.0;
+		angle2 -= 1.0;
 	}
 	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)
 	{
-		angle2 += 2.0;
+		angle2 += 1.0;
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
-		pbullet = { ((ship_rect2.x + ship_rect2.w) / 2), (ship_rect2.y - ship_rect2.h - 20) / 2, 20, 40 };
+		pbullet = {(ship_rect2.x + (ship_rect2.w / 2)), ship_rect2.y, 20, 40 };
 
 		pshot = true;
 	}
@@ -639,10 +645,10 @@ void UpdateLogic()
 		}
 		if (pshotAngle > 0 && pshotAngle < 90) {
 
-			bpos.x += bvelx2;
-			bpos.y -= bvely2;
-			pbullet.x = (int)bpos.x;
-			pbullet.y = (int)bpos.y;
+			bpos2.x += bvelx2;
+			bpos2.y -= bvely2;
+			pbullet.x = (int)bpos2.x;
+			pbullet.y = (int)bpos2.y;
 		}
 		if (pshotAngle == 90)
 		{
@@ -651,10 +657,10 @@ void UpdateLogic()
 
 		if (pshotAngle > 90 && pshotAngle < 180) {
 
-			bpos.x += bvelx2;
-			bpos.y += bvely2;
-			pbullet.x = (int)bpos.x;
-			pbullet.y = (int)bpos.y;
+			bpos2.x += bvelx2;
+			bpos2.y += bvely2;
+			pbullet.x = (int)bpos2.x;
+			pbullet.y = (int)bpos2.y;
 
 
 		}
@@ -665,13 +671,10 @@ void UpdateLogic()
 		}
 		if (pshotAngle > 180 && pshotAngle < 270) {
 
-			bvely2 = speed * -cos(pshotAngle * 0.01745329251);
-			bvelx2 = speed * -sin(pshotAngle * 0.01745329251);
-
-			bpos.x -= bvelx2;
-			bpos.y += bvely2;
-			pbullet.x = (int)bpos.x;
-			pbullet.y = (int)bpos.y;
+			bpos2.x -= bvelx2;
+			bpos2.y += bvely2;
+			pbullet.x = (int)bpos2.x;
+			pbullet.y = (int)bpos2.y;
 		}
 		if (pshotAngle == 270)
 		{
@@ -683,13 +686,10 @@ void UpdateLogic()
 		}
 		if (pshotAngle > 270 && pshotAngle < 360) {
 
-			bvely2 = speed * cos(pshotAngle * 0.01745329251);
-			bvelx2 = speed * -sin(pshotAngle * 0.01745329251);
-
-			bpos.x -= bvelx2;
-			bpos.y -= bvely2;
-			pbullet.x = (int)bpos.x;
-			pbullet.y = (int)bpos.y;
+			bpos2.x -= bvelx2;
+			bpos2.y -= bvely2;
+			pbullet.x = (int)bpos2.x;
+			pbullet.y = (int)bpos2.y;
 		}
 
 
@@ -712,15 +712,14 @@ int main(int argc, char* argv[])
 	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
 	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
 
+	
+
 	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
 	pos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
 	bpos = { (float)gbullet.x, (float)gbullet.y };
 	bpos2 = { (float)pbullet.x, (float)pbullet.y };
 	
-	/*bpos = { (float)ship_rect1.x, (float)ship_rect1.y };
-	bpos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
-*/
-
+	
 
 	if (InitSDL())
 	{
@@ -734,9 +733,9 @@ int main(int argc, char* argv[])
 				SDL_Delay(10);
 				render1 = false;
 				render2 = false;
-
-				SDL_Quit();
-				break;
+				draw = true;
+				
+				
 			}
 			if (check_border(ship_rect1, bg_rect)) {
 
@@ -780,20 +779,37 @@ int main(int argc, char* argv[])
 			if (!gshot) {
 
 				gshotAngle = angle1;
+				
+				bpos.x = (ship_rect1.x + 58) + (sin(angle1*0.01745329251) * 58);
+				bpos.y = ((ship_rect1.y + 71) + (cos(angle1*0.01745329251) * 71));
+				gbullet.x = bpos.x;
+				gbullet.y = bpos.y;
+
 				bvelx1 = velx1 * bspeed;
 				bvely1 = vely1 * bspeed;
-				bpos = pos;
+				
 				gshot = false;
 			}
 			if (!pshot) {
 
 				pshotAngle = angle2;
+
+				bpos2.x = (ship_rect2.x + 58) + (sin(angle2*0.01745329251) * 58);
+				bpos2.y = ((ship_rect2.y + 71) + (cos(angle2*0.01745329251) * 71));
+				pbullet.x = bpos2.x;
+				pbullet.y = bpos2.y;
+
+				bvelx2 = velx2 * bspeed;
+				bvely2 = vely2 * bspeed;
+
+				pshot = false;
 			}
 			Draw();
 			Trail();
 			Movement1();
-			//Movement2();
+			Movement2();
 
+			
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
 				SDL_Quit();
