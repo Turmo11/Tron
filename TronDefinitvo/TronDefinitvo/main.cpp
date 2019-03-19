@@ -56,8 +56,8 @@ Key_State keys[300];
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
-SDL_Rect gbullet = { ship_rect1.x, ship_rect1.x, 20, 40 };
-SDL_Rect pbullet = { ship_rect2.x, ship_rect2.x, 20, 40 };
+SDL_Rect gbullet = {};
+SDL_Rect pbullet = {};
 
 bool gshot = false;
 bool pshot = false;
@@ -66,6 +66,7 @@ SDL_Rect pastgPos[1000];
 SDL_Rect pastpPos[1000];
 
 bool gamestarted = false;
+bool gameEnd = false;
 
 bool purpleWin = false;
 bool greenWin = false;
@@ -80,6 +81,7 @@ float pshotAngle;
 
 
 const float speed = .1f;
+const float bspeed = 0.2f;
 
 float velx1;
 float vely1;
@@ -95,7 +97,7 @@ float bvely2;
 
 struct Vector2 { float x, y; };
 
-Vector2 pos{ship_rect1.x, ship_rect1.y};
+Vector2 pos{ ship_rect1.x, ship_rect1.y };
 Vector2 pos2{ ship_rect2.x, ship_rect2.y };
 Vector2 bpos{ gbullet.x, gbullet.y };
 Vector2 bpos2{ pbullet.x, pbullet.y };
@@ -172,7 +174,7 @@ void InitVariables()
 {
 	gamestarted = false;
 
-	
+
 
 
 	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
@@ -226,11 +228,11 @@ bool ProcessInput()
 void Draw()
 {
 	SDL_RenderClear(renderer);
-	
+
 
 	if (!gamestarted) {
 		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
-		
+
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
@@ -244,9 +246,9 @@ void Draw()
 
 			SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
 
+
 		}
 		else {
-
 
 			if (render1) {
 
@@ -263,28 +265,28 @@ void Draw()
 				SDL_RenderCopyEx(renderer, pbullet_texture, nullptr, &pbullet, pshotAngle, &centerb, flip);
 			}
 		}
-	
+
 	}
 
-	
+
 	SDL_RenderPresent(renderer);
 }
 
 void Trail() {
-	
+
 	int posIndex = 0;
 
-		if ( posIndex >= 1000)
-		{
-			posIndex = 0;
-		}
-		SDL_Rect tempRect = { ship_rect1.x, ship_rect1.y, 0, 0 };
-		pastgPos[posIndex] = tempRect;
+	if (posIndex >= 1000)
+	{
+		posIndex = 0;
+	}
+	SDL_Rect tempRect = { ship_rect1.x, ship_rect1.y, 0, 0 };
+	pastgPos[posIndex] = tempRect;
 
-		SDL_Rect trailRect = { pastgPos[posIndex].x, pastgPos[posIndex].y, 32, 8 };
-		SDL_RenderCopyEx(renderer, gbeam_texture, nullptr, &trailRect, angle1, &centerb, flip);
+	SDL_Rect trailRect = { pastgPos[posIndex].x, pastgPos[posIndex].y, 32, 8 };
+	SDL_RenderCopyEx(renderer, gbeam_texture, nullptr, &trailRect, angle1, &centerb, flip);
 
-		posIndex++; // This is to cycle through the array to store the new position
+	posIndex++; // This is to cycle through the array to store the new position
 }
 
 bool check_collision(SDL_Rect a, SDL_Rect b)
@@ -377,21 +379,21 @@ void Movement1() {
 	}
 	if (angle1 == 90)
 	{
-		velx1 = speed;	
+		velx1 = speed;
 		ship_rect1.x += velx1;
 	}
-	
+
 	if (angle1 > 90 && angle1 < 180) {
 
 		vely1 = speed * -cos(angle1 * 0.01745329251);
 		velx1 = speed * sin(angle1 * 0.01745329251);
-	
+
 		pos.x += velx1;
 		pos.y += vely1;
 		ship_rect1.x = (int)pos.x;
 		ship_rect1.y = (int)pos.y;
 
-		
+
 	}
 	if (angle1 == 180)
 	{
@@ -513,7 +515,7 @@ void Movement2() {
 }
 void UpdateLogic()
 {
-	
+
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
@@ -525,7 +527,7 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
-		gbullet = { ((ship_rect1.x + ship_rect1.w) / 2), (ship_rect1.y - ship_rect1.h - 20) / 2, 20, 40 };
+		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20, 40 };
 
 		
 		gshot = true;
@@ -542,13 +544,9 @@ void UpdateLogic()
 		}
 		if (gshotAngle == 0)
 		{
-			bvely1 = -speed;
 			gbullet.y += bvely1;
 		}
 		if (gshotAngle > 0 && gshotAngle < 90) {
-
-			bvely1 = speed * cos(gshotAngle * 0.01745329251);
-			bvelx1 = speed * sin(gshotAngle * 0.01745329251);
 
 			bpos.x += bvelx1;
 			bpos.y -= bvely1;
@@ -556,16 +554,13 @@ void UpdateLogic()
 			gbullet.y = (int)bpos.y;
 		}
 		if (gshotAngle == 90)
-		{
-			bvelx1 = speed;
+		{	
 			gbullet.x += bvelx1;
 		}
 
 		if (gshotAngle > 90 && gshotAngle < 180) {
 
-			bvely1 = speed * -cos(gshotAngle * 0.01745329251);
-			bvelx1 = speed * sin(gshotAngle * 0.01745329251);
-
+			
 			bpos.x += bvelx1;
 			bpos.y += bvely1;
 			gbullet.x = (int)bpos.x;
@@ -575,16 +570,10 @@ void UpdateLogic()
 		}
 		if (gshotAngle == 180)
 		{
-			bvelx1 = 0;
-			bvely1 = speed;
-			gbullet.x += bvelx1;
 			gbullet.y += bvely1;
 
 		}
 		if (gshotAngle > 180 && gshotAngle < 270) {
-
-			bvely1 = speed * -cos(gshotAngle * 0.01745329251);
-			bvelx1 = speed * -sin(gshotAngle * 0.01745329251);
 
 			bpos.x -= bvelx1;
 			bpos.y += bvely1;
@@ -593,17 +582,11 @@ void UpdateLogic()
 		}
 		if (gshotAngle == 270)
 		{
-			bvelx1 = -speed;
-			bvely1 = 0;
 			gbullet.x += bvelx1;
-			gbullet.y += bvely1;
+			
 
 		}
 		if (gshotAngle > 270 && gshotAngle < 360) {
-
-			bvely1 = speed * cos(gshotAngle * 0.01745329251);
-			bvelx1 = speed * -sin(gshotAngle * 0.01745329251);
-
 			bpos.x -= bvelx1;
 			bpos.y -= bvely1;
 			gbullet.x = (int)bpos.x;
@@ -612,9 +595,11 @@ void UpdateLogic()
 
 
 		
+
 	}
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
+		gshot = false;
 	}
 
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
@@ -643,13 +628,9 @@ void UpdateLogic()
 		}
 		if (pshotAngle == 0)
 		{
-			bvely2 = -speed;
 			pbullet.y += bvely2;
 		}
 		if (pshotAngle > 0 && pshotAngle < 90) {
-
-			bvely2 = speed * cos(pshotAngle * 0.01745329251);
-			bvelx2 = speed * sin(pshotAngle * 0.01745329251);
 
 			bpos.x += bvelx2;
 			bpos.y -= bvely2;
@@ -658,14 +639,10 @@ void UpdateLogic()
 		}
 		if (pshotAngle == 90)
 		{
-			bvelx2 = speed;
 			pbullet.x += bvelx2;
 		}
 
 		if (pshotAngle > 90 && pshotAngle < 180) {
-
-			bvely2 = speed * -cos(pshotAngle * 0.01745329251);
-			bvelx2 = speed * sin(pshotAngle * 0.01745329251);
 
 			bpos.x += bvelx2;
 			bpos.y += bvely2;
@@ -676,9 +653,6 @@ void UpdateLogic()
 		}
 		if (pshotAngle == 180)
 		{
-			bvelx2 = 0;
-			bvely2 = speed;
-			pbullet.x += bvelx2;
 			pbullet.y += bvely2;
 
 		}
@@ -714,7 +688,7 @@ void UpdateLogic()
 
 
 	}
-	
+
 	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)
 	{
 	}
@@ -736,72 +710,88 @@ int main(int argc, char* argv[])
 	bpos = { (float)gbullet.x, (float)gbullet.y };
 	bpos2 = { (float)pbullet.x, (float)pbullet.y };
 	
-	
-	
+	/*bpos = { (float)ship_rect1.x, (float)ship_rect1.y };
+	bpos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
+*/
+
+
 	if (InitSDL())
 	{
 		InitVariables();
 		while (ProcessInput())
 		{
-				UpdateLogic();
+			UpdateLogic();
 
-				if (check_collision(ship_rect1, ship_rect2)) {
+			if (check_collision(ship_rect1, ship_rect2)) {
 
-					SDL_Delay(10);
-					render1 = false;
-					render2 = false;
-					
-					SDL_Quit();
-					break;
-				}
-				if (check_border(ship_rect1, bg_rect)) {
+				SDL_Delay(10);
+				render1 = false;
+				render2 = false;
 
-					SDL_Delay(10);
-					render1 = false;
-					render2 = false;
-					purpleWin = true;
-				}
-				if (check_border(ship_rect2, bg_rect)) {
+				SDL_Quit();
+				break;
+			}
+			if (check_border(ship_rect1, bg_rect)) {
 
-					SDL_Delay(10);
-					render1 = false;
-					render2 = false;
-					greenWin = true;
-				}
-				if (check_collision(gbullet, ship_rect2)) {
+				SDL_Delay(10);
+				render1 = false;
+				render2 = false;
+				purpleWin = true;
 
-					SDL_Delay(10);
-					render1 = false;
-					render2 = false;
-					greenWin = true;
-					
-				}
-				if (check_collision(pbullet, ship_rect1)) {
 
-					SDL_Delay(10);
-					render1 = false;
-					render2 = false;
-					purpleWin = true;
-				}
+			}
+			if (check_border(ship_rect2, bg_rect)) {
 
-				if (!gshot) {
+				SDL_Delay(10);
+				render1 = false;
+				render2 = false;
+				greenWin = true;
 
-					gshotAngle = angle1;
-				}
-				if (!pshot) {
 
-					pshotAngle = angle2;
-				}
-				Draw();
-				Trail();
-				Movement1();
-				Movement2();
+			}
+			if (check_collision(gbullet, ship_rect2)) {
 
-				if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
+				SDL_Delay(10);
+				render1 = false;
+				render2 = false;
+				greenWin = true;
 
-					SDL_Quit();
-					break;
-				
+
+
+
+			}
+			if (check_collision(pbullet, ship_rect1)) {
+
+				SDL_Delay(10);
+				render1 = false;
+				render2 = false;
+				purpleWin = true;
+
+
+			}
+
+			if (!gshot) {
+
+				gshotAngle = angle1;
+				bvelx1 = velx1 * bspeed;
+				bvely1 = vely1 * bspeed;
+				bpos = pos;
+				gshot = false;
+			}
+			if (!pshot) {
+
+				pshotAngle = angle2;
+			}
+			Draw();
+			Trail();
+			Movement1();
+			Movement2();
+
+			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
+
+				SDL_Quit();
+				break;
+
 			}
 		}
 	}
