@@ -36,6 +36,10 @@ SDL_Surface* loadedImage = nullptr;
 
 //Textures
 SDL_Texture* bg_texture = nullptr;
+SDL_Texture* bg_texture2 = nullptr;
+SDL_Texture* bg_texture3 = nullptr;
+SDL_Texture* bg_texture4 = nullptr;
+
 SDL_Texture* ship_texture1 = nullptr;
 SDL_Texture* ship_texture2 = nullptr;
 
@@ -47,10 +51,15 @@ SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 
+bool gamestarted = false;
+
+bool purpleWin = false;
+bool greenWin = false;
+
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 290.0f;
+float angle1 = 90.0f;
 float angle2 = 270.0f;
 
 const float speed = 1.0f;
@@ -135,7 +144,11 @@ void CleanupSDL()
 
 void InitVariables()
 {
-	bg_texture = IMG_LoadTexture(renderer, "Textures/background.png");
+	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
+	bg_texture2 = IMG_LoadTexture(renderer, "Textures/background.png");
+	bg_texture3 = IMG_LoadTexture(renderer, "Textures/purple-wins.png");
+	bg_texture3 = IMG_LoadTexture(renderer, "Textures/green-wins.png");
+
 	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceship-green.png");
 	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceship-purple.png");
 	//bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
@@ -177,18 +190,32 @@ void Draw()
 {
 	SDL_RenderClear(renderer);
 
-	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
-
-	if (render1) {
-
-		SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+	if (!gamestarted) {
+		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 	}
-	if (render2) {
+	else if(purpleWin){
 
-		SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
+		SDL_Delay(5000);
+		SDL_Quit();
+	}
+	else if (greenWin) {
+
+	}
+	else {
+		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
+
+		if (render1) {
+
+			SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+		}
+		if (render2) {
+
+			SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+		}
 	}
 
-
+	
 	SDL_RenderPresent(renderer);
 }
 
@@ -418,7 +445,7 @@ void Movement2() {
 }
 void UpdateLogic()
 {
-
+	
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
@@ -435,9 +462,25 @@ void UpdateLogic()
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
 	}
-	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
+
+	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
+	{
+		angle2 -= 1.0;
+	}
+	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)
+	{
+		angle2 += 1.0;
+	}
+	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
 
+	}
+	if (keys[SDL_SCANCODE_DOWN] == KEY_REPEAT)
+	{
+	}
+	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
+	{
+		gamestarted = true;
 	}
 }
 
@@ -448,41 +491,43 @@ int main(int argc, char* argv[])
 	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
 	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
 	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
+	pos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
 	
 	if (InitSDL())
 	{
 		InitVariables();
 		while (ProcessInput())
 		{
-			UpdateLogic();
-			Movement1();
-			Movement2();
-			if (check_collision(ship_rect1, ship_rect2)) {
+				UpdateLogic();
 
-				SDL_Delay(10);
-				render1 = false;
-				render2 = false;
+				if (check_collision(ship_rect1, ship_rect2)) {
 
-			}
-			if (check_border(ship_rect1, bg_rect)) {
+					SDL_Delay(10);
+					render1 = false;
+					render2 = false;
 
-				SDL_Delay(10);
-				render1 = false;
-			}
-			if (check_border(ship_rect2, bg_rect)) {
+				}
+				if (check_border(ship_rect1, bg_rect)) {
 
-				SDL_Delay(10);
-				render2 = false;
-			}
+					SDL_Delay(10);
+					render1 = false;
+				}
+				if (check_border(ship_rect2, bg_rect)) {
 
+					SDL_Delay(10);
+					render2 = false;
+				}
 
-			Draw();
+				
+				Draw();
+				Movement1();
+				Movement2();
 
+				if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
-			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
-
-				SDL_Quit();
-				break;
+					SDL_Quit();
+					break;
+				
 			}
 		}
 	}
