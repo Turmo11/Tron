@@ -18,6 +18,9 @@
 
 using namespace std;
 
+const int WIDTH = 1920;
+const int HEIGHT = 1080;
+
 
 
 
@@ -55,7 +58,7 @@ SDL_Texture* pbeam_texture = nullptr;
 Key_State keys[300];
 
 //Rects
-SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
+SDL_Rect bg_rect = { 0, 0, WIDTH, HEIGHT };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 SDL_Rect gbullet = {};
@@ -86,7 +89,7 @@ float gshotAngle;
 float pshotAngle;
 
 
-const float speed = 2.0f;
+const float speed = 1.0f;
 const float bspeed = 3.0f;
 
 float velx1;
@@ -113,8 +116,12 @@ SDL_Point center = { 70, 58 };
 SDL_Point centerb = { 16, 4 };
 
 //Music
-//Mix_Music *bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
 Mix_Music *bgmusic = nullptr;
+
+//SFX
+Mix_Chunk *sbeam = nullptr;
+
+
 
 bool InitSDL()
 {
@@ -126,7 +133,7 @@ bool InitSDL()
 	}
 	else
 	{
-		window = SDL_CreateWindow("SDLTest", 0, 0, 1920, 1080, SDL_WINDOW_SHOWN);
+		window = SDL_CreateWindow("SDLTest", 0, 0, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
 		if (window == nullptr)
 		{
 			cout << "Window not created" << endl;
@@ -201,6 +208,9 @@ void InitVariables()
 	bgmusic = Mix_LoadMUS("Music/bgmusic.ogg");
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(bgmusic, -1);
+
+	sbeam = Mix_LoadWAV("Music/sbeam.ogg");
+	Mix_Volume(1, MIX_MAX_VOLUME / 2);
 
 
 }
@@ -349,9 +359,9 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 	bottomA = a.y + a.h - 5;
 
 	leftB = 0;
-	rightB = 1920;
+	rightB = WIDTH;
 	topB = 0;
-	bottomB = 1080;
+	bottomB = HEIGHT;
 
 	if (bottomA >= bottomB) {
 		return true;
@@ -534,19 +544,22 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		angle1 += 1.0;
+		angle1 += .5;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		angle1 -= 1.0;
+		angle1 -= .5;
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
 		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20, 40 };
 		
 		gshot = true;
+		
 	}
 	if (gshot) {
+
+		
 
 		if (gshotAngle >= 360)
 		{
@@ -618,17 +631,18 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
 	{
-		angle2 -= 1.0;
+		angle2 -= .5;
 	}
 	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)
 	{
-		angle2 += 1.0;
+		angle2 += .5;
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
 		pbullet = {(ship_rect2.x + (ship_rect2.w / 2)), ship_rect2.y, 20, 40 };
 
 		pshot = true;
+		Mix_PlayChannel(-1, sbeam, 0);
 	}
 	if (pshot) {
 
@@ -710,8 +724,8 @@ int main(int argc, char* argv[])
 {
 	srand(time(NULL));
 
-	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
-	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
+	ship_rect1 = { (rand() % ((WIDTH/4) + 116)) + 116 , (rand() % (HEIGHT - 141)) + 141, 141, 116 };
+	ship_rect2 = { (rand() % (WIDTH - 116)) + WIDTH/2 , (rand() % (HEIGHT - 141)) + 141, 141, 116 };
 
 	
 
@@ -806,9 +820,9 @@ int main(int argc, char* argv[])
 				pshot = false;
 			}
 			Draw();
-			Trail();
+			//setTrail();
 			Movement1();
-			Movement2();
+			//Movement2();
 
 			
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
