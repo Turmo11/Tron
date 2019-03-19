@@ -39,6 +39,8 @@ SDL_Texture* bg_texture = nullptr;
 SDL_Texture* bg_texture2 = nullptr;
 SDL_Texture* bg_texture3 = nullptr;
 SDL_Texture* bg_texture4 = nullptr;
+SDL_Texture* bg_texture5 = nullptr;
+SDL_Texture* bg_texture6 = nullptr;
 
 SDL_Texture* ship_texture1 = nullptr;
 SDL_Texture* ship_texture2 = nullptr;
@@ -163,6 +165,8 @@ bool InitSDL()
 	return true;
 }
 
+//void 
+
 void CleanupSDL()
 {
 	SDL_Quit();
@@ -177,10 +181,13 @@ void InitVariables()
 
 
 
-	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
+	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN2.png");
 	bg_texture2 = IMG_LoadTexture(renderer, "Textures/background.png");
 	bg_texture3 = IMG_LoadTexture(renderer, "Textures/purple-wins.png");
 	bg_texture4 = IMG_LoadTexture(renderer, "Textures/green-wins.png");
+	bg_texture5 = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
+	bg_texture6 = IMG_LoadTexture(renderer, "Textures/draw.png");
+
 
 	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceship-green.png");
 	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceship-purple.png");
