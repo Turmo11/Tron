@@ -172,8 +172,7 @@ void InitVariables()
 {
 	gamestarted = false;
 
-	purpleWin = false;
-	greenWin = false;
+	
 
 
 	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
@@ -235,40 +234,36 @@ void Draw()
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
-	}
-	if(purpleWin){
 
-		SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
-		
-	}
-	else {
-		if (render1) {
+		if (purpleWin) {
 
-			SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+			SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
+
 		}
+		else if (greenWin) {
 
-	}
-	if (greenWin) {
+			SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
 
-		SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
-		
-	}else {
-		
-
-		if (render1) {
-
-			SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
 		}
-		if (render2) {
+		else {
 
-			SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+
+			if (render1) {
+
+				SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+			}
+			if (render2) {
+
+				SDL_RenderCopyEx(renderer, ship_texture2, nullptr, &ship_rect2, angle2, &center, flip);
+			}
+			if (gshot) {
+				SDL_RenderCopyEx(renderer, gbullet_texture, nullptr, &gbullet, gshotAngle, &centerb, flip);
+			}
+			if (pshot) {
+				SDL_RenderCopyEx(renderer, pbullet_texture, nullptr, &pbullet, pshotAngle, &centerb, flip);
+			}
 		}
-		if (gshot) {
-			SDL_RenderCopyEx(renderer, gbullet_texture, nullptr, &gbullet, gshotAngle, &centerb, flip);
-		}
-		if (pshot) {
-			SDL_RenderCopyEx(renderer, pbullet_texture, nullptr, &pbullet, pshotAngle, &centerb, flip);
-		}
+	
 	}
 
 	
