@@ -57,7 +57,7 @@ SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 SDL_Rect gbullet = { 500, 500, 20, 40 };
-SDL_Rect pbullet = { -50, -50, 20, 40 };
+SDL_Rect pbullet = { 500, 500, 20, 40 };
 
 bool gshot = false;
 bool pshot = false;
@@ -253,7 +253,7 @@ void Draw()
 			SDL_RenderCopyEx(renderer, gbullet_texture, nullptr, &gbullet, gshotAngle, &centerb, flip);
 		}
 		if (pshot) {
-			SDL_RenderCopyEx(renderer, pbullet_texture, nullptr, &pbullet, angle1, &centerb, flip);
+			SDL_RenderCopyEx(renderer, pbullet_texture, nullptr, &pbullet, pshotAngle, &centerb, flip);
 		}
 	}
 
@@ -633,32 +633,32 @@ void UpdateLogic()
 		}
 		if (pshotAngle == 0)
 		{
-			bvely1 = -speed;
-			pbullet.y += bvely1;
+			bvely2 = -speed;
+			pbullet.y += bvely2;
 		}
 		if (pshotAngle > 0 && pshotAngle < 90) {
 
-			bvely1 = speed * cos(pshotAngle * 0.01745329251);
-			bvelx1 = speed * sin(pshotAngle * 0.01745329251);
+			bvely2 = speed * cos(pshotAngle * 0.01745329251);
+			bvelx2 = speed * sin(pshotAngle * 0.01745329251);
 
-			bpos.x += bvelx1;
-			bpos.y -= bvely1;
+			bpos.x += bvelx2;
+			bpos.y -= bvely2;
 			pbullet.x = (int)bpos.x;
 			pbullet.y = (int)bpos.y;
 		}
 		if (pshotAngle == 90)
 		{
-			bvelx1 = speed;
-			pbullet.x += bvelx1;
+			bvelx2 = speed;
+			pbullet.x += bvelx2;
 		}
 
 		if (pshotAngle > 90 && pshotAngle < 180) {
 
-			bvely1 = speed * -cos(pshotAngle * 0.01745329251);
-			bvelx1 = speed * sin(pshotAngle * 0.01745329251);
+			bvely2 = speed * -cos(pshotAngle * 0.01745329251);
+			bvelx2 = speed * sin(pshotAngle * 0.01745329251);
 
-			bpos.x += bvelx1;
-			bpos.y += bvely1;
+			bpos.x += bvelx2;
+			bpos.y += bvely2;
 			pbullet.x = (int)bpos.x;
 			pbullet.y = (int)bpos.y;
 
@@ -666,37 +666,37 @@ void UpdateLogic()
 		}
 		if (pshotAngle == 180)
 		{
-			bvelx1 = 0;
-			bvely1 = speed;
-			pbullet.x += bvelx1;
-			pbullet.y += bvely1;
+			bvelx2 = 0;
+			bvely2 = speed;
+			pbullet.x += bvelx2;
+			pbullet.y += bvely2;
 
 		}
 		if (pshotAngle > 180 && pshotAngle < 270) {
 
-			bvely1 = speed * -cos(pshotAngle * 0.01745329251);
-			bvelx1 = speed * -sin(pshotAngle * 0.01745329251);
+			bvely2 = speed * -cos(pshotAngle * 0.01745329251);
+			bvelx2 = speed * -sin(pshotAngle * 0.01745329251);
 
-			bpos.x -= bvelx1;
-			bpos.y += bvely1;
+			bpos.x -= bvelx2;
+			bpos.y += bvely2;
 			pbullet.x = (int)bpos.x;
 			pbullet.y = (int)bpos.y;
 		}
 		if (pshotAngle == 270)
 		{
-			bvelx1 = -speed;
-			bvely1 = 0;
-			pbullet.x += bvelx1;
-			pbullet.y += bvely1;
+			bvelx2 = -speed;
+			bvely2 = 0;
+			pbullet.x += bvelx2;
+			pbullet.y += bvely2;
 
 		}
 		if (pshotAngle > 270 && pshotAngle < 360) {
 
-			bvely1 = speed * cos(pshotAngle * 0.01745329251);
-			bvelx1 = speed * -sin(pshotAngle * 0.01745329251);
+			bvely2 = speed * cos(pshotAngle * 0.01745329251);
+			bvelx2 = speed * -sin(pshotAngle * 0.01745329251);
 
-			bpos.x -= bvelx1;
-			bpos.y -= bvely1;
+			bpos.x -= bvelx2;
+			bpos.y -= bvely2;
 			pbullet.x = (int)bpos.x;
 			pbullet.y = (int)bpos.y;
 		}
@@ -756,6 +756,21 @@ int main(int argc, char* argv[])
 					render1 = false;
 					render2 = false;
 					greenWin = true;
+				}
+				if (check_collision(gbullet, ship_rect2)) {
+
+					SDL_Delay(10);
+					render1 = false;
+					render2 = false;
+					greenWin = true;
+					
+				}
+				if (check_collision(pbullet, ship_rect1)) {
+
+					SDL_Delay(10);
+					render1 = false;
+					render2 = false;
+					purpleWin = true;
 				}
 
 				if (!gshot) {
