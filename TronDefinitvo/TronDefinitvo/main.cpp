@@ -250,14 +250,74 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 	}
 	return false;
 }
+void Movement() {
 
+	if (angle1 >= 360)
+	{
+		angle1 = 0;
+		velx1 = 0;
+		vely1 = speed;
+	}
+	if (angle1 > 0 && angle1 < 90) {
+
+		velx1 = speed * cos(angle1 * 0.01745329251);
+		vely1 = speed * sin(angle1 * 0.01745329251);
+
+		ship_rect1.x += velx1;
+		ship_rect1.y -= vely1;
+	}
+	if (angle1 == 90)
+	{
+		velx1 = speed;
+		vely1 = 0;
+		ship_rect1.x += velx1;
+		ship_rect1.y -= vely1;
+
+	}
+	if (angle1 > 90 && angle1 < 180) {
+
+		velx1 = speed * cos(angle1 * 0.01745329251);
+		vely1 = speed * sin(angle1 * 0.01745329251);
+		ship_rect1.x -= velx1;
+		ship_rect1.y -= vely1;
+	}
+	if (angle1 == 180)
+	{
+		velx1 = 0;
+		vely1 = speed;
+		ship_rect1.x += velx1;
+		ship_rect1.y -= vely1;
+
+	}
+	if (angle1 > 180 && angle1 < 270) {
+
+		velx1 = speed * cos(angle1 * 0.01745329251);
+		vely1 = speed * sin(angle1 * 0.01745329251);
+		ship_rect1.x -= velx1;
+		ship_rect1.y += vely1;
+	}
+	if (angle1 == 270)
+	{
+		velx1 = -speed;
+		vely1 = 0;
+		ship_rect1.x += velx1;
+		ship_rect1.y -= vely1;
+
+	}
+	if (angle1 > 270 && angle1 <= 359 || angle1 == 0) {
+
+		velx1 = speed * cos(angle1 * 0.01745329251);
+		vely1 = speed * sin(angle1 * 0.01745329251);
+		ship_rect1.x += velx1;
+		ship_rect1.y += vely1;
+	}
+
+
+}
 void UpdateLogic()
 {
-	velx1 = speed * cos(angle1);
-	vely1 = speed * sin(angle1);
-	ship_rect1.x -= velx1;
-	ship_rect1.y += vely1;
 
+	
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
 		angle1 += 1.0;
@@ -293,6 +353,7 @@ int main(int argc, char* argv[])
 		while (ProcessInput())
 		{
 			UpdateLogic();
+			Movement();
 			if (check_collision(ship_rect1, ship_rect2)) {
 				
 				SDL_Delay(10);
@@ -313,7 +374,8 @@ int main(int argc, char* argv[])
 			
 
 			Draw();
-
+			cout << angle1 << endl;
+		
 
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
