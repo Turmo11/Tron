@@ -56,8 +56,8 @@ Key_State keys[300];
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
-SDL_Rect gbullet = { 500, 500, 20, 40 };
-SDL_Rect pbullet = { 500, 500, 20, 40 };
+SDL_Rect gbullet = { ship_rect1.x, ship_rect1.x, 20, 40 };
+SDL_Rect pbullet = { ship_rect2.x, ship_rect2.x, 20, 40 };
 
 bool gshot = false;
 bool pshot = false;
@@ -517,6 +517,7 @@ void UpdateLogic()
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
 		gbullet = { ((ship_rect1.x + ship_rect1.w) / 2), (ship_rect1.y - ship_rect1.h - 20) / 2, 20, 40 };
+
 		
 		gshot = true;
 	}
@@ -617,7 +618,7 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
-		pbullet = { ((ship_rect1.x + ship_rect1.w) / 2), (ship_rect1.y - ship_rect1.h - 20) / 2, 20, 40 };
+		pbullet = { ((ship_rect2.x + ship_rect2.w) / 2), (ship_rect2.y - ship_rect2.h - 20) / 2, 20, 40 };
 
 		pshot = true;
 	}
