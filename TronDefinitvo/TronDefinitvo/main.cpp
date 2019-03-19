@@ -236,19 +236,19 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 	topB = 0;
 	bottomB = 1080;
 
-	if (bottomA <= topB) {
-		return false;
+	if (bottomA >= bottomB) {
+		return true;
 	}
-	if (topA >= bottomB) {
-		return false;
+	if (topA <= topB) {
+		return true;
 	}
-	if (rightA <= leftB) {
-		return false;
+	if (rightA >= rightB) {
+		return true;
 	}
-	if (leftA >= rightB) {
-		return false;
+	if (leftA <= leftB) {
+		return true;
 	}
-	return true;
+	return false;
 }
 
 void UpdateLogic()
@@ -271,13 +271,13 @@ void UpdateLogic()
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
 		ship_rect1.y -= 3;
-		if (ship_rect1.y < 0) ship_rect1.y = 0;
+		
 
 	}
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
 		ship_rect1.y += 3;
-		if (ship_rect1.y > 1080 - ship_rect1.h) ship_rect1.y = 1080 - ship_rect1.h;
+		
 
 
 	}
@@ -318,8 +318,8 @@ int main(int argc, char* argv[])
 				render2 = false;
 			}
 			
-			ship_rect1.x = velx1;
-			ship_rect1.y = vely1;
+			//ship_rect1.x = velx1;
+			//ship_rect1.y = vely1;
 
 			Draw();
 
