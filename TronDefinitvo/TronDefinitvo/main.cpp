@@ -76,14 +76,14 @@ bool greenWin = false;
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 0.0f;
+float angle1 = 90.0f;
 float angle2 = 270.0f;
 float gshotAngle;
 float pshotAngle;
 
 
-const float speed = .1f;
-const float bspeed = 0.2f;
+const float speed = 2.0f;
+const float bspeed = 6.0f;
 
 float velx1;
 float vely1;
@@ -526,11 +526,11 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		angle1 += .1;
+		angle1 += 2.0;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		angle1 -= .1;
+		angle1 -= 2.0;
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
@@ -611,11 +611,11 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
 	{
-		angle2 -= .1;
+		angle2 -= 2.0;
 	}
 	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)
 	{
-		angle2 += .1;
+		angle2 += 2.0;
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
@@ -792,7 +792,7 @@ int main(int argc, char* argv[])
 			Draw();
 			Trail();
 			Movement1();
-			Movement2();
+			//Movement2();
 
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
