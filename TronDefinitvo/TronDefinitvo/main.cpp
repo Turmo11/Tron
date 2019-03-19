@@ -59,7 +59,7 @@ bool greenWin = false;
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 90.0f;
+float angle1 = 0.0f;
 float angle2 = 270.0f;
 
 const float speed = 1.0f;
@@ -195,12 +195,13 @@ void Draw()
 	}
 	else if(purpleWin){
 
-		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
-		SDL_Delay(5000);
-		SDL_Quit();
+		SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
+		
 	}
 	else if (greenWin) {
 
+		SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
+		
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
@@ -505,17 +506,21 @@ int main(int argc, char* argv[])
 					SDL_Delay(10);
 					render1 = false;
 					render2 = false;
+					SDL_Delay(5000);
+					SDL_Quit();
 
 				}
 				if (check_border(ship_rect1, bg_rect)) {
 
 					SDL_Delay(10);
 					render1 = false;
+					purpleWin = true;
 				}
 				if (check_border(ship_rect2, bg_rect)) {
 
 					SDL_Delay(10);
 					render2 = false;
+					greenWin = true;
 				}
 
 				
