@@ -43,6 +43,9 @@ SDL_Texture* bg_texture4 = nullptr;
 SDL_Texture* ship_texture1 = nullptr;
 SDL_Texture* ship_texture2 = nullptr;
 
+SDL_Texture* gbeam_texture = nullptr;
+SDL_Texture* pbeam_texture = nullptr;
+
 //Input
 Key_State keys[300];
 
@@ -50,6 +53,10 @@ Key_State keys[300];
 SDL_Rect bg_rect = { 0, 0, 1920, 1080 };
 SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
+
+
+SDL_Rect pastgPos[1000];
+SDL_Rect pastpPos[1000];
 
 bool gamestarted = false;
 
@@ -147,10 +154,13 @@ void InitVariables()
 	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
 	bg_texture2 = IMG_LoadTexture(renderer, "Textures/background.png");
 	bg_texture3 = IMG_LoadTexture(renderer, "Textures/purple-wins.png");
-	bg_texture3 = IMG_LoadTexture(renderer, "Textures/green-wins.png");
+	bg_texture4 = IMG_LoadTexture(renderer, "Textures/green-wins.png");
 
 	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceship-green.png");
 	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceship-purple.png");
+
+	gbeam_texture = IMG_LoadTexture(renderer, "Textures/green-beams.png");
+	pbeam_texture = IMG_LoadTexture(renderer, "Textures/purple-beams.png");
 	//bgmusic = Mix_LoadMUS("Music/NeonRunner.ogg");
 
 
@@ -195,12 +205,12 @@ void Draw()
 	}
 	else if(purpleWin){
 
-		SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
+		SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
 		
 	}
 	else if (greenWin) {
 
-		SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
+		SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
 		
 	}
 	else {
@@ -218,6 +228,32 @@ void Draw()
 
 	
 	SDL_RenderPresent(renderer);
+}
+
+void Trail() {
+	
+	int posIndex = 0;
+
+		if ( posIndex >= 1000)
+		{
+			posIndex = 0;
+		}
+
+		for (int i = 0; i < 1000; i++) // Loop through all the 1000 past positions of the player
+		{
+			// pastPlayerPos is an array of SDL_Rects that stores the players last 1000 positions
+			// This line calculates the location to draw the trail texture
+			SDL_Rect trailRect = { pastgPos[i].x, pastgPos[i].y, 32, 8 };
+			// This draws the trail texture
+			SDL_RenderCopyEx(renderer, gbeam_texture, nullptr, &trailRect, angle1, &center, flip);
+		}
+
+
+		// This is storing the past position
+		SDL_Rect tempRect = { ship_rect1.x, ship_rect1.y, 0, 0 };
+		pastgPos[posIndex] = tempRect;
+
+		posIndex++; // This is to cycle through the array to store the new position
 }
 
 bool check_collision(SDL_Rect a, SDL_Rect b)
@@ -525,6 +561,7 @@ int main(int argc, char* argv[])
 
 				
 				Draw();
+				//Trail();
 				Movement1();
 				Movement2();
 
