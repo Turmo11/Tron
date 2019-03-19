@@ -23,7 +23,7 @@ Isekai hack is a team of videogame design and development students formed by:
 
  Guillem Turmo (Turmo11) - https://github.com/Turmo11
 
- Óscar Tarrés (oscarta3) - https://github.com/oscarta3
+ Òscar Tarrés (oscarta3) - https://github.com/oscarta3
 
  Santiago Moliner (sanmopre) - https://github.com/sanmopre
 
