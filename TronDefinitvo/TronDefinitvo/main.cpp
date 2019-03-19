@@ -55,11 +55,11 @@ float angle2 = 270.0f;
 
 const float speed = 1.0f;
 
-float velx1 = speed * cos(angle1);
-float vely1 = speed * sin(angle1);
+float velx1;
+float vely1;
 
-float velx2 = speed * cos(angle2);
-float vely2 = speed * sin(angle2);
+float velx2;
+float vely2;
 
 SDL_RendererFlip flip = SDL_FLIP_NONE;
 SDL_Point center = { 70, 58};
@@ -253,33 +253,26 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 
 void UpdateLogic()
 {
+	velx1 = speed * cos(angle1);
+	vely1 = speed * sin(angle1);
+	ship_rect1.x -= velx1;
+	ship_rect1.y += vely1;
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		if (ship_rect1.x > 1920 - ship_rect1.w) ship_rect1.x = 1920 - ship_rect1.w;
 		angle1 += 1.0;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		if (ship_rect1.x < 0) ship_rect1.x = 0;
-
 		angle1 -= 1.0;
-	/*	int newx = ship_rect1.x + (ship_rect1.y*cos(angle1 * 0.0174532925));
-		int newy = ship_rect1.y + (ship_rect1.y*sin(angle1 * 0.0174532925));
-		*/
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
 		ship_rect1.y -= 3;
-		
-
 	}
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
 		ship_rect1.y += 3;
-		
-
-
 	}
 	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
 	{
@@ -318,8 +311,6 @@ int main(int argc, char* argv[])
 				render2 = false;
 			}
 			
-			//ship_rect1.x = velx1;
-			//ship_rect1.y = vely1;
 
 			Draw();
 
