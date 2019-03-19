@@ -79,7 +79,7 @@ float gshotAngle;
 float pshotAngle;
 
 
-const float speed = 1.0f;
+const float speed = .1f;
 
 float velx1;
 float vely1;
@@ -170,6 +170,12 @@ void CleanupSDL()
 
 void InitVariables()
 {
+	gamestarted = false;
+
+	purpleWin = false;
+	greenWin = false;
+
+
 	bg_texture = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
 	bg_texture2 = IMG_LoadTexture(renderer, "Textures/background.png");
 	bg_texture3 = IMG_LoadTexture(renderer, "Textures/purple-wins.png");
@@ -227,19 +233,27 @@ void Draw()
 		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 		
 	}
-	else if(purpleWin){
+	else {
+		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
+	}
+	if(purpleWin){
 
 		SDL_RenderCopy(renderer, bg_texture3, nullptr, &bg_rect);
 		
 	}
-	else if (greenWin) {
+	else {
+		if (render1) {
+
+			SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
+		}
+
+	}
+	if (greenWin) {
 
 		SDL_RenderCopy(renderer, bg_texture4, nullptr, &bg_rect);
 		
-	}
-	
-	else {
-		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
+	}else {
+		
 
 		if (render1) {
 
@@ -508,11 +522,11 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
-		angle1 += 1.0;
+		angle1 += .1;
 	}
 	if (keys[SDL_SCANCODE_A] == KEY_REPEAT)
 	{
-		angle1 -= 1.0;
+		angle1 -= .1;
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
@@ -610,11 +624,11 @@ void UpdateLogic()
 
 	if (keys[SDL_SCANCODE_LEFT] == KEY_REPEAT)
 	{
-		angle2 -= 1.0;
+		angle2 -= .1;
 	}
 	if (keys[SDL_SCANCODE_RIGHT] == KEY_REPEAT)
 	{
-		angle2 += 1.0;
+		angle2 += .1;
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
@@ -721,6 +735,7 @@ int main(int argc, char* argv[])
 
 	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
 	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
+
 	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
 	pos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
 	bpos = { (float)gbullet.x, (float)gbullet.y };
