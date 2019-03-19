@@ -50,7 +50,7 @@ SDL_Rect ship_rect2 = {};
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 90.0f;
+float angle1 = 290.0f;
 float angle2 = 270.0f;
 
 const float speed = 1.0f;
@@ -61,8 +61,13 @@ float vely1;
 float velx2;
 float vely2;
 
+struct Vector2 { float x, y; };
+
+Vector2 pos{ship_rect1.x, ship_rect1.y};
+Vector2 pos2{ ship_rect2.x, ship_rect2.y };
+
 SDL_RendererFlip flip = SDL_FLIP_NONE;
-SDL_Point center = { 70, 58};
+SDL_Point center = { 70, 58 };
 
 //Music
 //Mix_Music *bgmusic = NULL;
@@ -173,7 +178,7 @@ void Draw()
 	SDL_RenderClear(renderer);
 
 	SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
-	
+
 	if (render1) {
 
 		SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
@@ -198,7 +203,7 @@ bool check_collision(SDL_Rect a, SDL_Rect b)
 	rightA = a.x + a.w - 10;
 	topA = a.y + 10;
 	bottomA = a.y + a.h - 10;
-	
+
 	leftB = b.x + 10;
 	rightB = b.x + b.w - 10;
 	topB = b.y + 10;
@@ -250,66 +255,163 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 	}
 	return false;
 }
-void Movement() {
+void Movement1() {
 
 	if (angle1 >= 360)
 	{
 		angle1 = 0;
-		velx1 = 0;
-		vely1 = speed;
+	}
+	if (angle1 < 0)
+	{
+		angle1 = 359;
+	}
+	if (angle1 == 0)
+	{
+		vely1 = -speed;
+		ship_rect1.y += vely1;
 	}
 	if (angle1 > 0 && angle1 < 90) {
 
-		velx1 = speed * cos(angle1 * 0.01745329251);
-		vely1 = speed * sin(angle1 * 0.01745329251);
+		vely1 = speed * cos(angle1 * 0.01745329251);
+		velx1 = speed * sin(angle1 * 0.01745329251);
 
-		ship_rect1.x += velx1;
-		ship_rect1.y -= vely1;
+		pos.x += velx1;
+		pos.y -= vely1;
+		ship_rect1.x = (int)pos.x;
+		ship_rect1.y = (int)pos.y;
 	}
 	if (angle1 == 90)
 	{
-		velx1 = speed;
-		vely1 = 0;
+		velx1 = speed;	
 		ship_rect1.x += velx1;
-		ship_rect1.y -= vely1;
-
 	}
+	
 	if (angle1 > 90 && angle1 < 180) {
 
-		velx1 = speed * cos(angle1 * 0.01745329251);
-		vely1 = speed * sin(angle1 * 0.01745329251);
-		ship_rect1.x -= velx1;
-		ship_rect1.y -= vely1;
+		vely1 = speed * -cos(angle1 * 0.01745329251);
+		velx1 = speed * sin(angle1 * 0.01745329251);
+	
+		pos.x += velx1;
+		pos.y += vely1;
+		ship_rect1.x = (int)pos.x;
+		ship_rect1.y = (int)pos.y;
+
+		
 	}
 	if (angle1 == 180)
 	{
 		velx1 = 0;
 		vely1 = speed;
 		ship_rect1.x += velx1;
-		ship_rect1.y -= vely1;
+		ship_rect1.y += vely1;
 
 	}
 	if (angle1 > 180 && angle1 < 270) {
 
-		velx1 = speed * cos(angle1 * 0.01745329251);
-		vely1 = speed * sin(angle1 * 0.01745329251);
-		ship_rect1.x -= velx1;
-		ship_rect1.y += vely1;
+		vely1 = speed * -cos(angle1 * 0.01745329251);
+		velx1 = speed * -sin(angle1 * 0.01745329251);
+
+		pos.x -= velx1;
+		pos.y += vely1;
+		ship_rect1.x = (int)pos.x;
+		ship_rect1.y = (int)pos.y;
 	}
 	if (angle1 == 270)
 	{
 		velx1 = -speed;
 		vely1 = 0;
 		ship_rect1.x += velx1;
-		ship_rect1.y -= vely1;
+		ship_rect1.y += vely1;
 
 	}
-	if (angle1 > 270 && angle1 <= 359 || angle1 == 0) {
+	if (angle1 > 270 && angle1 < 360) {
 
-		velx1 = speed * cos(angle1 * 0.01745329251);
-		vely1 = speed * sin(angle1 * 0.01745329251);
-		ship_rect1.x += velx1;
-		ship_rect1.y += vely1;
+		vely1 = speed * cos(angle1 * 0.01745329251);
+		velx1 = speed * -sin(angle1 * 0.01745329251);
+
+		pos.x -= velx1;
+		pos.y -= vely1;
+		ship_rect1.x = (int)pos.x;
+		ship_rect1.y = (int)pos.y;
+	}
+
+
+}
+void Movement2() {
+
+	if (angle2 >= 360)
+	{
+		angle2 = 0;
+	}
+	if (angle2 < 0)
+	{
+		angle2 = 359;
+	}
+	if (angle2 == 0)
+	{
+		vely2 = -speed;
+		ship_rect2.y += vely2;
+	}
+	if (angle2 > 0 && angle2 < 90) {
+
+		vely2 = speed * cos(angle2 * 0.01745329251);
+		velx2 = speed * sin(angle2 * 0.01745329251);
+
+		pos2.x += velx2;
+		pos2.y -= vely2;
+		ship_rect2.x = (int)pos2.x;
+		ship_rect2.y = (int)pos2.y;
+	}
+	if (angle2 == 90)
+	{
+		velx2 = speed;
+		ship_rect2.x += velx2;
+	}
+
+	if (angle2 > 90 && angle2 < 180) {
+
+		vely2 = speed * -cos(angle2 * 0.01745329251);
+		velx2 = speed * sin(angle2 * 0.01745329251);
+
+		pos2.x += velx2;
+		pos2.y += vely2;
+		ship_rect2.x = (int)pos2.x;
+		ship_rect2.y = (int)pos2.y;
+
+
+	}
+	if (angle2 == 180)
+	{
+		velx2 = 0;
+		vely2 = speed;
+		ship_rect2.x += velx2;
+		ship_rect2.y += vely2;
+
+	}
+	if (angle2 > 180 && angle2 < 270) {
+
+		vely2 = speed * -cos(angle2 * 0.01745329251);
+		velx2 = speed * -sin(angle2 * 0.01745329251);
+
+		pos2.x -= velx2;
+		pos2.y += vely2;
+		ship_rect2.x = (int)pos2.x;
+		ship_rect2.y = (int)pos2.y;
+	}
+	if (angle2 == 270)
+	{
+		velx2 = -speed;
+		ship_rect2.x += velx2;
+	}
+	if (angle2 > 270 && angle2 < 360) {
+
+		vely2 = speed * cos(angle2 * 0.01745329251);
+		velx2 = speed * -sin(angle2 * 0.01745329251);
+
+		pos2.x -= velx2;
+		pos2.y -= vely2;
+		ship_rect2.x = (int)pos2.x;
+		ship_rect2.y = (int)pos2.y;
 	}
 
 
@@ -317,7 +419,7 @@ void Movement() {
 void UpdateLogic()
 {
 
-	
+
 	if (keys[SDL_SCANCODE_D] == KEY_REPEAT)
 	{
 		angle1 += 1.0;
@@ -328,11 +430,10 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
-		ship_rect1.y -= 3;
+
 	}
 	if (keys[SDL_SCANCODE_S] == KEY_REPEAT)
 	{
-		ship_rect1.y += 3;
 	}
 	if (keys[SDL_SCANCODE_SPACE] == KEY_DOWN)
 	{
@@ -346,20 +447,22 @@ int main(int argc, char* argv[])
 
 	ship_rect1 = { (rand() % 828) + 116 , (rand() % 798) + 141, 141, 116 };
 	ship_rect2 = { (rand() % 728) + 1076, (rand() % 798) + 141, 141, 116 };
-
+	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
+	
 	if (InitSDL())
 	{
 		InitVariables();
 		while (ProcessInput())
 		{
 			UpdateLogic();
-			Movement();
+			Movement1();
+			Movement2();
 			if (check_collision(ship_rect1, ship_rect2)) {
-				
+
 				SDL_Delay(10);
 				render1 = false;
 				render2 = false;
-				
+
 			}
 			if (check_border(ship_rect1, bg_rect)) {
 
@@ -371,11 +474,10 @@ int main(int argc, char* argv[])
 				SDL_Delay(10);
 				render2 = false;
 			}
-			
+
 
 			Draw();
-			cout << angle1 << endl;
-		
+
 
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
