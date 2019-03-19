@@ -60,6 +60,8 @@ SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 SDL_Rect gbullet = {};
 SDL_Rect pbullet = {};
+SDL_Rect gbeam[10] = {};
+SDL_Rect pbeam[10] = {};
 
 bool gshot = false;
 bool pshot = false;
@@ -196,7 +198,7 @@ void InitVariables()
 	pbeam_texture = IMG_LoadTexture(renderer, "Textures/purple-beams.png");
 	
 
-	bgmusic = Mix_LoadMUS("Textures/bmusic.ogg");
+	bgmusic = Mix_LoadMUS("Music/bgmusic.ogg");
 	Mix_VolumeMusic(MIX_MAX_VOLUME / 2);
 	Mix_PlayMusic(bgmusic, -1);
 
@@ -239,8 +241,9 @@ void Draw()
 
 
 	if (!gamestarted) {
-		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
 
+		SDL_RenderCopy(renderer, bg_texture, nullptr, &bg_rect);
+		
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
@@ -286,21 +289,19 @@ void Draw()
 	SDL_RenderPresent(renderer);
 }
 
-void Trail() {
+struct Trail {
+	int x;
+	int y;
+};
+void setTrail() {
+	while (1) {
 
-	int posIndex = 0;
-
-	if (posIndex >= 1000)
-	{
-		posIndex = 0;
+		Trail trail{ ship_rect1.x, ship_rect1.y };
+		
+		SDL_RenderCopy(renderer, gbeam_texture, nullptr, &gbeam[0]);
+		//el gbeam ya esta incializado
 	}
-	SDL_Rect tempRect = { ship_rect1.x, ship_rect1.y, 0, 0 };
-	pastgPos[posIndex] = tempRect;
-
-	SDL_Rect trailRect = { pastgPos[posIndex].x, pastgPos[posIndex].y, 32, 8 };
-	SDL_RenderCopyEx(renderer, gbeam_texture, nullptr, &trailRect, angle1, &centerb, flip);
-
-	posIndex++; // This is to cycle through the array to store the new position
+	
 }
 
 bool check_collision(SDL_Rect a, SDL_Rect b)
