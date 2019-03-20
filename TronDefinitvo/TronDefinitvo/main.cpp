@@ -330,12 +330,13 @@ void setTrail() {
 			SDL_RenderCopy(renderer, gbeam_texture, nullptr, &gtrail[i]);	
 		}
 		else {
-			gameEnd = true;
+			
 			Mix_PlayChannel(-1, explosion, 0);
 			render1 = false;
 			render2 = false;
 			purpleWin = true;
 			greenWin = false;
+			gameEnd = true;
 		}
 		if (!check_collision(ptrail[i], ship_rect1) && !gameEnd) {
 
@@ -343,12 +344,13 @@ void setTrail() {
 			SDL_RenderCopy(renderer, pbeam_texture, nullptr, &ptrail[i]);
 		}
 		else {
-			gameEnd = true;
+			
 			Mix_PlayChannel(-1, explosion, 0);
 			render1 = false;
 			render2 = false;
 			purpleWin = false;
 			greenWin = true;
+			gameEnd = true;
 		}
 		while (check_collision(gtrail[i], pbullet)) {
 
@@ -809,6 +811,7 @@ int main(int argc, char* argv[])
 				render1 = false;
 				render2 = false;
 				purpleWin = true;
+				greenWin = false;
 				gameEnd = true;
 
 			}
@@ -818,6 +821,7 @@ int main(int argc, char* argv[])
 				SDL_Delay(10);
 				render1 = false;
 				render2 = false;
+				purpleWin = false;
 				greenWin = true;
 				gameEnd = true;
 
@@ -877,9 +881,9 @@ int main(int argc, char* argv[])
 			
 			if (gamestarted) {
 				Movement1();
-				Movement2();
 			}
-
+			
+			Movement2();
 			
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
