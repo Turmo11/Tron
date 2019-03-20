@@ -200,7 +200,6 @@ void InitVariables()
 	bg_texture5 = IMG_LoadTexture(renderer, "Textures/LOADING_SCREEN.png");
 	bg_texture6 = IMG_LoadTexture(renderer, "Textures/draw.png");
 
-
 	ship_texture1 = IMG_LoadTexture(renderer, "Textures/spaceship-green.png");
 	ship_texture2 = IMG_LoadTexture(renderer, "Textures/spaceship-purple.png");
 
@@ -218,7 +217,16 @@ void InitVariables()
 	sbeam = Mix_LoadWAV("Music/sbeam.ogg");
 	explosion = Mix_LoadWAV("SoundFX/explosion.wav");
 
-	Mix_Volume(1, 45);
+	Mix_Volume(1, 20);
+
+	ship_rect1 = { 117, (rand() % (HEIGHT - 300)) + 150, 141 / 2, 116 / 2 };
+	ship_rect2 = { WIDTH - 300, (rand() % (HEIGHT - 141)) + 141, 141 / 2, 116 / 2 };
+
+
+	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
+	pos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
+	bpos = { (float)gbullet.x, (float)gbullet.y };
+	bpos2 = { (float)pbullet.x, (float)pbullet.y };
 
 
 }
@@ -775,14 +783,7 @@ int main(int argc, char* argv[])
 {
 	srand(time(NULL));
 
-	ship_rect1 = { 117, (rand() % (HEIGHT - 300)) + 150, 141/2, 116/2 };
-	ship_rect2 = { WIDTH - 300, (rand() % (HEIGHT - 141)) + 141, 141/2, 116/2 };
 	
-
-	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
-	pos2 = { (float)ship_rect2.x, (float)ship_rect2.y };
-	bpos = { (float)gbullet.x, (float)gbullet.y };
-	bpos2 = { (float)pbullet.x, (float)pbullet.y };
 	
 	
 
