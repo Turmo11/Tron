@@ -63,12 +63,10 @@ SDL_Rect ship_rect1 = {};
 SDL_Rect ship_rect2 = {};
 SDL_Rect gbullet = {};
 SDL_Rect pbullet = {};
-SDL_Rect gPastpos[5000]{};
-SDL_Rect pPastpos[5000]{};
 
 //Trail
-
-
+SDL_Rect gPastpos[5000]{};
+SDL_Rect pPastpos[5000]{};
 SDL_Rect gtrail[5000] = {};
 SDL_Rect ptrail[5000] = {};
 
@@ -88,8 +86,8 @@ bool draw = false;
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 90.0f;
-float angle2 = 270.0f;
+float angle1 = 0.0f;
+float angle2 = 310.0f;
 float gshotAngle;
 float pshotAngle;
 
@@ -119,8 +117,8 @@ Vector2 bpos{ gbullet.x, gbullet.y };
 Vector2 bpos2{ pbullet.x, pbullet.y };
 
 SDL_RendererFlip flip = SDL_FLIP_NONE;
-SDL_Point center = { 70, 58 };
-SDL_Point centerb = { 16, 4 };
+SDL_Point center = { 70/2, 58/2 };
+SDL_Point centerb = { 16/2, 4/2 };
 
 //Music
 Mix_Music *bgmusic = nullptr;
@@ -328,27 +326,29 @@ void setTrail() {
 	{
 		if (!check_collision(gtrail[i], ship_rect2) && !gameEnd) {
 
-			gtrail[i] = { gPastpos[i].x, gPastpos[i].y, 12, 12 };
+			gtrail[i] = { gPastpos[i].x, gPastpos[i].y, 12/2, 12/2 };
 			SDL_RenderCopy(renderer, gbeam_texture, nullptr, &gtrail[i]);	
 		}
 		else {
-			Mix_PlayChannel(-1, explosion, 0);
-			greenWin = true;
-			render1 = false;
-			render2 = false;
 			gameEnd = true;
-		}
-		if (!check_collision(ptrail[i], ship_rect1) && !gameEnd) {
-
-			ptrail[i] = { pPastpos[i].x, pPastpos[i].y, 12, 12 };
-			SDL_RenderCopy(renderer, pbeam_texture, nullptr, &ptrail[i]);
-		}
-		else {
 			Mix_PlayChannel(-1, explosion, 0);
 			render1 = false;
 			render2 = false;
 			purpleWin = true;
+			greenWin = false;
+		}
+		if (!check_collision(ptrail[i], ship_rect1) && !gameEnd) {
+
+			ptrail[i] = { pPastpos[i].x, pPastpos[i].y, 12/2, 12/2 };
+			SDL_RenderCopy(renderer, pbeam_texture, nullptr, &ptrail[i]);
+		}
+		else {
 			gameEnd = true;
+			Mix_PlayChannel(-1, explosion, 0);
+			render1 = false;
+			render2 = false;
+			purpleWin = false;
+			greenWin = true;
 		}
 		while (check_collision(gtrail[i], pbullet)) {
 
@@ -381,6 +381,7 @@ void Draw()
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
+		setTrail();
 
 		if (purpleWin) {
 
@@ -401,7 +402,7 @@ void Draw()
 		}
 		else {
 			
-			setTrail();
+			
 			if (render1) {
 
 				SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
@@ -423,7 +424,7 @@ void Draw()
 
 	SDL_RenderPresent(renderer);
 }
-
+ 
 
 
 
@@ -602,7 +603,7 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
-		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20, 40 };
+		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20/2, 40/2 };
 		
 		if (!gshot) {
 			Mix_PlayChannel(-1, sbeam, 0);
@@ -688,7 +689,7 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_UP] == KEY_REPEAT)
 	{
-		pbullet = {(ship_rect2.x + (ship_rect2.w / 2)), ship_rect2.y, 20, 40 };
+		pbullet = {(ship_rect2.x + (ship_rect2.w / 2)), ship_rect2.y, 20/2, 40/2 };
 		
 			Mix_PlayChannel(-1, sbeam, 0);
 			pshot = true;
@@ -772,10 +773,8 @@ int main(int argc, char* argv[])
 {
 	srand(time(NULL));
 
-	/*ship_rect1 = { (rand() % ((WIDTH/3) + 116)) + 116 , (rand() % (HEIGHT - 300)) + 150, 141, 116 };
-	ship_rect2 = { (rand() % (WIDTH/3)) + (WIDTH - 116 -(WIDTH/3)) , (rand() % (HEIGHT - 141)) + 141, 141, 116 };*/
-	ship_rect1 = { 117, (rand() % (HEIGHT - 300)) + 150, 141, 116 };
-	ship_rect2 = { WIDTH - 300, (rand() % (HEIGHT - 141)) + 141, 141, 116 };
+	ship_rect1 = { 117, (rand() % (HEIGHT - 300)) + 150, 141/2, 116/2 };
+	ship_rect2 = { WIDTH - 300, (rand() % (HEIGHT - 141)) + 141, 141/2, 116/2 };
 	
 
 	pos = { (float)ship_rect1.x, (float)ship_rect1.y };
@@ -875,9 +874,11 @@ int main(int argc, char* argv[])
 				pshot = false;
 			}
 			Draw();
-			//setTrail();
-			Movement1();
-			Movement2();
+			
+			if (gamestarted) {
+				Movement1();
+				Movement2();
+			}
 
 			
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
