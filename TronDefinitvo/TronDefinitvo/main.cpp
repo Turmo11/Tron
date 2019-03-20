@@ -358,7 +358,7 @@ void setTrail() {
 		}
 		while (check_collision(ptrail[i], gbullet)) {
 
-			ptrail[i] = { pPastpos[i].x, pPastpos[i].y, 0, 0 };
+			ptrail[i] = { 0, 0, 0, 0 };
 		}
 	}
 
@@ -605,7 +605,7 @@ void UpdateLogic()
 	}
 	if (keys[SDL_SCANCODE_W] == KEY_REPEAT)
 	{
-		gbullet = { (ship_rect1.x + (ship_rect1.w / 2)), ship_rect1.y, 20/2, 40/2 };
+		gbullet = { ((ship_rect1.x / 2 + (ship_rect1.w / 2)/2)), ship_rect1.y/2, 20/2, 40/2 };
 		
 		if (!gshot) {
 			Mix_PlayChannel(-1, sbeam, 0);
