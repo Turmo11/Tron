@@ -383,7 +383,7 @@ void Draw()
 	}
 	else {
 		SDL_RenderCopy(renderer, bg_texture2, nullptr, &bg_rect);
-		setTrail();
+		
 
 		if (purpleWin) {
 
@@ -404,7 +404,7 @@ void Draw()
 		}
 		else {
 			
-			
+			setTrail();
 			if (render1) {
 
 				SDL_RenderCopyEx(renderer, ship_texture1, nullptr, &ship_rect1, angle1, &center, flip);
@@ -881,9 +881,10 @@ int main(int argc, char* argv[])
 			
 			if (gamestarted) {
 				Movement1();
+				Movement2();
 			}
 			
-			Movement2();
+			
 			
 			if (keys[SDL_SCANCODE_ESCAPE] == KEY_DOWN) {
 
