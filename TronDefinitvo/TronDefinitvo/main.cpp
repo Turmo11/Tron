@@ -93,7 +93,7 @@ float pshotAngle;
 
 
 const float speed = 2.0f;
-const float bspeed = 4.0f;
+const float bspeed = speed * 2;
 
 float velx1;
 float vely1;
@@ -317,14 +317,14 @@ bool check_border(SDL_Rect a, SDL_Rect b)
 	return false;
 }
 void setTrail() {
-	if (index >= 5000)
+	if (index >= 2000)
 	{
 		index = 0;
 	}
 
-	for (int i = 0; i < 5000; i++) // Loop through all the 100 past positions of the player
+	for (int i = 0; i < 2000; i++) // Loop through all the n past positions of the player
 	{
-		if (!check_collision(gtrail[i], ship_rect2) && !gameEnd) {
+		if (!check_collision(gtrail[i], ship_rect2)) {
 
 			gtrail[i] = { gPastpos[i].x, gPastpos[i].y, 12/2, 12/2 };
 			SDL_RenderCopy(renderer, gbeam_texture, nullptr, &gtrail[i]);	
@@ -338,7 +338,7 @@ void setTrail() {
 			greenWin = false;
 			gameEnd = true;
 		}
-		if (!check_collision(ptrail[i], ship_rect1) && !gameEnd) {
+		if (!check_collision(ptrail[i], ship_rect1)) {
 
 			ptrail[i] = { pPastpos[i].x, pPastpos[i].y, 12/2, 12/2 };
 			SDL_RenderCopy(renderer, pbeam_texture, nullptr, &ptrail[i]);
