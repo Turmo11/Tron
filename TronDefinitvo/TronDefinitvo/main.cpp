@@ -86,8 +86,8 @@ bool draw = false;
 bool render1 = true;
 bool render2 = true;
 
-float angle1 = 0.0f;
-float angle2 = 310.0f;
+float angle1 = 100.0f;
+float angle2 = 280.0f;
 float gshotAngle;
 float pshotAngle;
 
@@ -334,8 +334,8 @@ void setTrail() {
 			Mix_PlayChannel(-1, explosion, 0);
 			render1 = false;
 			render2 = false;
-			purpleWin = true;
-			greenWin = false;
+			purpleWin = false;
+			greenWin = true;
 			gameEnd = true;
 		}
 		if (!check_collision(ptrail[i], ship_rect1)) {
@@ -348,8 +348,8 @@ void setTrail() {
 			Mix_PlayChannel(-1, explosion, 0);
 			render1 = false;
 			render2 = false;
-			purpleWin = false;
-			greenWin = true;
+			purpleWin = true;
+			greenWin = false;
 			gameEnd = true;
 		}
 		while (check_collision(gtrail[i], pbullet)) {
