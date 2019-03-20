@@ -17,6 +17,11 @@ You may also find that sometimes the first time executing may generate some bugs
 
 Finally this program does not take into account DeltaTime, therefore if you have higher or lower fps the movement might look different, we will be fixing that soon enough.
 
+RECENTLY FIXED 
+
+- green/purple player doesn't start winning right after compiling (collision border bug fixed)
+- purple player does not spawn out of the map anymore
+
 ABOUT US:
 
 Isekai hack is a team of videogame design and development students formed by:
