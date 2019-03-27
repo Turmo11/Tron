@@ -74,7 +74,7 @@ SDL_Rect ptrail[5000] = {};
 bool gshot = false;
 bool pshot = false;
 
-
+bool gameRestart = false;
 bool gamestarted = false;
 bool gameEnd = false;
 
