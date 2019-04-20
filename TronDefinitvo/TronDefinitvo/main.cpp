@@ -790,6 +790,7 @@ int main(int argc, char* argv[])
 	if (InitSDL())
 	{
 		InitVariables();
+		
 		while (ProcessInput())
 		{
 			UpdateLogic();
